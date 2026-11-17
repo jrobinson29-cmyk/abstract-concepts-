@@ -30,6 +30,7 @@ select,input{margin:3px;accent-color:#a47aff}
 .cards{display:flex;gap:18px;flex-wrap:wrap;justify-content:center;margin:8px 0}
 .card{width:220px;min-height:170px;padding:18px;text-align:left;cursor:pointer;border:2px solid var(--c);border-radius:14px;background:linear-gradient(160deg,#ffffff14,#000a);box-shadow:0 0 18px var(--c);transition:.15s}
 .card:hover{transform:translateY(-8px) scale(1.05);box-shadow:0 0 34px var(--c)}.rar{color:var(--c);font-size:11px;letter-spacing:3px;text-transform:uppercase}.nm{font-size:20px;font-weight:bold;margin:10px 0}.ds{font-size:13px;opacity:.8;line-height:1.4}
+.aah.dkh{background:linear-gradient(90deg,#ff2a40,#b070ff,#3ce0d0,#a8e02a);-webkit-background-clip:text;background-clip:text;color:transparent}
 </style></head><body>
 <div id="hud"><div id="hp"><i id="hpf"></i><span id="hpt"></span></div><div id="inf"></div><div id="wb"></div><div id="cb"></div><div id="hapw"><div id="hapf"></div><b>HAPPY</b></div><div id="bb"><span id="bn"></span><div id="bbw"><div id="bbf"></div></div></div><div id="cx"><i></i></div><div id="fl"></div><div id="msg"></div></div>
 <div class="ov" id="menu" style="display:flex"><h1>ABSTRACT CONCEPTS</h1>
@@ -1049,6 +1050,117 @@ SETS.push(
  {id:'lily_armour',n:'Armour of Freedom',slot:'chest',d:'Silver breastplate, silver leggings and matching silver bracelets.',b:bFreedomArmour},
  {id:'lily_wings',n:'Wings of Dawn',slot:'back',d:'Two large ivory angelic wings with softly glowing edges.',b:bDawnWings,fp:fpWing(0xfff6c8)}]});
 
+/* ===== THE DARKNESS SET (cosmetic only) ===== */
+const dkM=(c,o)=>sm(c,Object.assign({roughness:.4},o||{})),gemM=(c,e)=>sm(c,{metalness:.3,roughness:.1,emissive:e||c,emissiveIntensity:.7}),ironM=()=>sm(0x1a1a1e,{metalness:.85,roughness:.3});
+function dkChain(p,x,y,z,n,dx,dy,m){const a=[];for(let k=0;k<n;k++)a.push(cQ(p,CG.tk,m,x+dx*k,y+dy*k,z,.03,.03,1.6,0,k%2?HP:0,0));return a}
+function dkOrbs(par,c,n,r,y,sz){const a=[];for(let i=0;i<n;i++)a.push({m:cQ(par,GS,glow(c,.75),0,0,0,sz,sz,sz),a:i/n*6.28,r:r*(.8+Math.random()*.4),p:Math.random()*6});
+ return t=>a.forEach(o=>{o.m.position.set(Math.cos(o.a+t*.6)*o.r,y+Math.sin(t*1.4+o.p)*.12,Math.sin(o.a+t*.6)*o.r)})}
+/* 1 Umbral Witch */
+function bHennin(R){const h=R.P.hd,B=dkM(0x0d0b10),g=cP(h,0,0,0);cQ(g,CG.half,B,0,.22,0,.43,.36,.43);cQ(g,CG.tk,dkM(0x5a0a12),0,.24,0,.43,.43,1.3,HP);
+ const hs=[];for(const s of[-1,1]){const p=cP(g,s*.2,.48,-.05);p.rotation.z=-s*.35;hs.push(p);for(let k=0;k<5;k++)cQ(p,GC,B,s*k*.025,.12+k*.13,-k*.02,.13-k*.02,.09,.13-k*.02)}
+ cQ(g,GO,gemM(0xff1030,0xaa0010),0,.33,.42,.05,.07,.03);return t=>hs.forEach((p,i)=>p.rotation.x=Math.sin(t*1.5+i)*.03)}
+function bEnchGown(R){const g=R.g,Bc=cloth(0x0d0b10),Cr=cloth(0x7a0a18);cQ(g,GX,Bc,-.17,.3,0,.35,.71,.41);cQ(g,GX,Cr,.17,.3,0,.35,.71,.41);
+ const sk=cP(g,0,-.02,0);cQ(sk,CG.fr,Bc,0,-.45,0,.66,.9,.52);const hf=cQ(sk,CG.fr,Cr,.001,-.45,0,.665,.9,.525);hf.geometry=new THREE.CylinderGeometry(.5,1,1,20,1,true,0,Math.PI);
+ for(let k=0;k<6;k++){const a=k/6*6.28;cQ(sk,GC,k%2?Cr:Bc,Math.sin(a)*.6,-.95,Math.cos(a)*.48,.1,.12,.06,Math.PI)}
+ for(const[p,m]of[[R.P.la,Bc],[R.P.ra,Cr]])cQ(p,CG.fr,m,0,-.35,0,.22,.5,.22);return(t,v)=>{sk.rotation.x=-.1*mv(v)+Math.sin(t*2)*.02}}
+function bDracMantle(R){const cp=cP(R.g,0,.64,-.22),B=cloth(0x0d0b10),In=cloth(0x8a2a1c),ws=[];
+ for(const s of[-1,1]){const w=cP(cp,s*.12,0,0);ws.push({w,s});for(let k=0;k<4;k++){const f=cP(w,s*k*.12,-k*.05,0);f.rotation.z=s*(.15+k*.08);cQ(f,GX,B,s*.12,-.75,0,.26,1.5-k*.12,.02);cQ(f,GX,In,s*.12,-.75,.012,.24,1.46-k*.12,.008);cQ(f,GC,B,s*.12,-1.55+k*.06,0,.13,.15,.02,Math.PI)}
+  cQ(w,GC,B,s*.5,.18,0,.05,.22,.05,0,0,-s*.3)}
+ return(t,v)=>{cp.rotation.x=.12+.6*mv(v)+Math.sin(t*1.8)*.04;ws.forEach(o=>o.w.rotation.y=o.s*(.15+Math.sin(t*1.2)*.05))}}
+function bCrimRegalia(R){const g=R.g,Cr=dkM(0x6a0a14,{metalness:.6}),B=dkM(0x0d0b10);cQ(g,GX,Cr,0,.42,.21,.5,.42,.04);cQ(g,GO,gemM(0xff1030,0xaa0010),0,.45,.24,.07,.1,.04);
+ for(const s of[-1,1])cQ(g,CG.half,Cr,s*.42,.6,0,.18,.12,.2);cQ(R.P.la,GY,B,0,-.6,0,.13,.16,.13);cQ(R.P.ra,GY,Cr,0,-.6,0,.13,.16,.13);
+ const rb=[];for(const s of[-1,1]){const p=cP(g,s*.3,.5,-.18);rb.push(p);cQ(p,GX,glow(0xff3050,.35),0,-.6,0,.06,1.2,.01)}
+ return(t,v)=>rb.forEach((p,i)=>{p.rotation.x=.2+.7*mv(v)+Math.sin(t*2.4+i)*.12;p.rotation.z=Math.sin(t*1.7+i)*.1})}
+/* 2 Violet Seer */
+function bSeerVeil(R){const h=R.P.hd,B=dkM(0x15151a,{roughness:.3}),S1=sMet();cQ(h,CG.tk,B,0,.2,0,.42,.42,4,HP);cQ(h,GX,B,0,.2,.4,.5,.12,.06);
+ cQ(h,GS,S1,0,.2,.44,.07,.035,.02);cQ(h,GS,gemM(0xb070ff),0,.2,.455,.02,.02,.01);for(let k=-3;k<=3;k++)if(k)cQ(h,GS,S1,k*.07,.2,.435,.015,.015,.015)}
+function bNoodleLocks(R){const h=R.P.hd,Iv=sm(0xf4efe4,{roughness:.8}),Li=sm(0xc8a8f0,{roughness:.8}),st=[];cQ(h,CG.half,Iv,0,.17,-.03,.44,.4,.44);
+ for(let i=0;i<8;i++){const a=-1.6+i/7*3.2,p=cP(h,Math.sin(a)*.38,.25,-Math.cos(a)*.3-.05);st.push(p);for(let k=0;k<7;k++)cQ(p,GS,k%2?Li:Iv,0,-k*.12,0,.045,.07,.045)}
+ const hn=[];for(const s of[-1,1]){const p=cP(h,s*.32,.62,0);hn.push(p);cQ(p,GC,gemM(0x8a3cff,0x5a10cc),0,.1,0,.06,.22,.06,0,0,-s*.4)}
+ const sp=dkOrbs(h,0xb070ff,6,.55,.2,.025);return(t,v)=>{st.forEach((p,i)=>{p.rotation.x=.1+.5*mv(v)+Math.sin(t*2+i)*.06;p.rotation.z=Math.sin(t*1.5+i*.7)*.05});hn.forEach((p,i)=>p.position.y=.62+Math.sin(t*2+i*3)*.03);sp(t)}}
+function bStraitWear(R){const g=R.g,Iv=cloth(0xece6dc),B=cloth(0x18181c);cQ(g,GX,Iv,0,.3,0,.68,.71,.41);for(let k=0;k<6;k++)cQ(g,GX,sm(0xd8d0c4),0,.05+k*.11,.207,.66,.015,.01);
+ cQ(g,GX,B,0,.58,0,.7,.18,.42);for(const p of[R.P.ll,R.P.rl]){cQ(p,CG.fr,Iv,0,-.42,0,.32,.86,.32);cQ(p,GX,B,0,-.35,.17,.3,.03,.02);cQ(p,GX,B,0,-.6,.18,.34,.03,.02)}}
+function bShackles(R){const g=R.g,I=ironM();cQ(g,CG.tk,I,0,.7,0,.24,.24,4,HP);cQ(g,GX,gemM(0x9b40ff),0,.6,.24,.06,.08,.02);
+ const ch=[];for(const p of[R.P.la,R.P.ra]){cQ(p,GY,I,0,-.55,0,.14,.1,.14);const c=cP(p,0,-.6,.1);ch.push(c);dkChain(c,0,0,0,4,0,-.06,I)}
+ const o=dkOrbs(g,0x9cff4a,5,.7,.4,.04);return t=>{ch.forEach((c,i)=>c.rotation.x=Math.sin(t*3+i)*.3);o(t)}}
+/* 3 Sporebound */
+function bSporeCrown(R){const h=R.P.hd,Fr=sm(0xe8fff8,{transparent:true,opacity:.55,roughness:.3}),W=sm(0xffffff,{roughness:.9});cQ(h,CG.half,Fr,0,.18,0,.44,.4,.44);cQ(h,GX,Fr,0,.33,.38,.6,.12,.05);
+ for(const s of[-1,1])cQ(h,GS,W,s*.38,.4,-.1,.1,.1,.1);const f=[];for(let i=0;i<4;i++){const p=cP(h,(i-1.5)*.18,.6,-.1);f.push(p);cQ(p,GY,gemM(0x3ce0d0,0x0a7a70),0,0,0,.02,.12,.02);cQ(p,CG.half,gemM(0x2ad4c4,0x087064),0,.06,0,.06,.04,.06)}
+ return t=>f.forEach((p,i)=>p.position.y=.6+Math.sin(t*2+i)*.03)}
+function bNightgown(R){const g=R.g,W=cloth(0xf2f2ee),Sg=cloth(0x9ab88a);cQ(g,GX,W,0,.3,0,.72,.72,.44);const sk=cP(g,0,-.02,0);cQ(sk,CG.fr,W,0,-.42,0,.66,.84,.5);cQ(sk,CG.fr,Sg,0,-.42,0,.6,.82,.46);
+ for(let k=0;k<5;k++){const a=k*1.3;cQ(sk,GS,sm(0x2a3a2a),Math.sin(a)*.6,-.5-k*.06,Math.cos(a)*.46,.04,.05,.01,0,a,0)}
+ for(const p of[R.P.la,R.P.ra])cQ(p,CG.fr,W,0,-.42,0,.24,.62,.24);return(t,v)=>{sk.rotation.x=-.1*mv(v)+Math.sin(t*1.6)*.03}}
+function bFungalHalo(R){const hp=cP(R.g,0,.95,0),st=[];for(let i=0;i<8;i++){const a=i/8*6.28,p=cP(hp,Math.cos(a)*.62,0,Math.sin(a)*.62);st.push(p);cQ(p,GY,gemM(0x3ce0d0,0x0a7a70),0,0,0,.02,.3,.02);cQ(p,GS,gemM(0x7affea,0x1aa090),0,.17,0,.05,.05,.05)}
+ const o=dkOrbs(hp,0x5affe0,8,.8,-.2,.035);return t=>{hp.rotation.y=t*.3;st.forEach((p,i)=>p.position.y=Math.sin(t*1.6+i)*.06);o(t)}}
+function bSporeChains(R){const g=R.g,I=ironM();cQ(g,CG.tk,I,0,.7,0,.24,.24,4,HP);cQ(g,GO,sMet(),0,.56,.24,.05,.07,.03);
+ const ch=cP(R.P.rl,0,-.78,.08);dkChain(ch,0,0,0,5,.05,-.01,I);for(const p of[R.P.ll,R.P.rl])for(let k=0;k<3;k++)cQ(p,GS,gemM(0x2a6a3a,0x0a2a10),(k-1)*.08,-.82,.1,.05,.03,.05);
+ return t=>{ch.rotation.y=Math.sin(t*2)*.3}}
+/* 4 Gloom Colossus (bulky) */
+function bDecayCrown(R){const h=R.P.hd,B=sm(0x0a0a0c,{roughness:.8}),S1=sMet();cQ(h,CG.half,B,0,.17,-.03,.45,.42,.45);const hp=cP(h,0,.25,-.38);cQ(hp,GX,B,0,-.45,0,.5,.9,.08);
+ const orn=[];for(let k=0;k<3;k++){orn.push(cQ(hp,GO,S1,0,-.2-k*.3,-.06,.06,.08,.03))}const o=cQ(h,GS,gemM(0x444450,0x111),0,.85,0,.07,.07,.07);
+ return(t,v)=>{hp.rotation.x=.1+.5*mv(v)+Math.sin(t*1.5)*.04;o.position.y=.85+Math.sin(t*2)*.04;orn.forEach((m,i)=>m.rotation.y=t+i)}}
+function bBrandTorso(R){const g=R.g,C=sm(0x34343a,{roughness:.6});cQ(g,GX,C,0,.32,0,.86,.78,.5);for(const s of[-1,1]){cQ(g,GS,C,s*.24,.46,.2,.2,.16,.1);cQ(g,GS,C,s*.52,.6,0,.24,.2,.24)}
+ for(const p of[R.P.la,R.P.ra])cQ(p,GY,C,0,-.3,0,.17,.6,.17);const r=glow(0xff2a10,.95),rs=[cQ(g,GX,r,0,.42,.26,.03,.3,.01),cQ(g,GX,r,0,.5,.26,.26,.03,.01),cQ(g,CG.tk,r,0,.42,.26,.12,.12,.4)];
+ return t=>rs.forEach(m=>m.material.opacity=.6+Math.sin(t*3)*.35)}
+function bShatTrousers(R){const Gr=cloth(0x6a6a70),D=cloth(0x2a2a2e);cQ(R.g,GX,Gr,0,-.05,0,.84,.16,.5);for(const p of[R.P.ll,R.P.rl]){cQ(p,CG.fr,Gr,0,-.38,0,.34,.78,.34);for(let k=0;k<4;k++)cQ(p,GC,D,(k-1.5)*.1,-.78,.1,.05,.08,.02,Math.PI)}}
+function bRuinCollar(R){const I=ironM(),c=cP(R.g,0,.72,0);cQ(c,CG.tk,I,0,0,0,.28,.28,5,HP);const hang=cP(c,.12,-.02,.26);dkChain(hang,0,0,0,4,0,-.06,I);
+ const r=glow(0xff3a20,.8);for(const p of[R.P.la,R.P.ra,R.P.ll,R.P.rl])for(let k=0;k<2;k++)cQ(p,GO,r,0,-.25-k*.25,.17,.04,.06,.01);return t=>hang.rotation.x=Math.sin(t*2.2)*.25}
+/* 5 Cakebound General */
+function bGenLocks(R){const h=R.P.hd,C=sm(0x26262c,{roughness:.7}),Rd=sm(0xa01428,{roughness:.6});cQ(h,CG.half,C,0,.17,-.03,.45,.42,.45);const st=[];
+ for(let i=0;i<7;i++){const a=-1.5+i/6*3,p=cP(h,Math.sin(a)*.36,.3,-Math.cos(a)*.3-.05);st.push(p);for(let k=0;k<9;k++)cQ(p,GX,i%3==1?Rd:C,0,-k*.15,-k*k*.003,.1,.17,.05)
+  ;cQ(p,GC,C,0,-1.38,-.3,.05,.12,.03,-.9)}return(t,v)=>st.forEach((p,i)=>{p.rotation.x=.1+.6*mv(v)+Math.sin(t*1.8+i)*.05})}
+function bCmdJacket(R){const g=R.g,Bu=cloth(0x5a0c1c),Sh=cloth(0xb81830);cQ(g,GX,Sh,0,.3,0,.68,.71,.41);cQ(g,GX,Bu,-.2,.45,.01,.3,.42,.42);cQ(g,GX,Bu,.2,.45,.01,.3,.42,.42);
+ cQ(g,CG.tk,sm(0xc02030,{roughness:1}),0,.66,0,.32,.26,6,HP);for(let k=0;k<2;k++)dkChain(g,-.06,.5-k*.12,.22,3,.06,0,sMet());
+ cQ(R.P.la,CG.fr,Bu,0,-.3,0,.23,.42,.23);cQ(R.P.la,GY,dkM(0x0d0d10),0,-.55,0,.15,.12,.15);cQ(R.P.ra,CG.fr,Bu,0,-.3,0,.23,.42,.23)}
+function bMilSlacks(R){const P=cloth(0xd8d6d2);cQ(R.g,GY,dkM(0x0d0d10),0,-.02,0,.36,.07,.22);cQ(R.g,GX,sm(0xf08a78,{metalness:.6}),0,-.02,.225,.08,.06,.02);
+ for(const p of[R.P.ll,R.P.rl]){cQ(p,GY,P,0,-.4,0,.16,.8,.16);cQ(p,GX,dkM(0x0d0d10),0,-.76,.04,.22,.12,.3)}cQ(R.P.ll,GY,dkM(0xc01828),0,-.22,0,.17,.05,.17);
+ for(const p of[R.P.ll,R.P.rl])cQ(p,GO,gemM(0xe0103a,0x700010),0,-.68,.16,.04,.05,.02)}
+function bCakeClaw(R){const a=R.P.ra,Rd=sm(0xd01830,{roughness:.4}),W=sm(0xf4ece8,{roughness:.5}),c=cP(a,0,-.55,0);for(let k=0;k<5;k++)cQ(c,GY,k%2?W:Rd,0,-k*.08,0,.2+k*.02,.08,.2+k*.02);
+ const hd=cP(c,0,-.45,.04);cQ(hd,GS,sm(0xf8e8e0),0,0,0,.24,.12,.24);const t4=[];for(let k=0;k<4;k++){const p=cP(hd,(k-1.5)*.11,-.05,.12);t4.push(p);cQ(p,GC,gemM(0xff1a2a,0x900010),0,-.14,0,.04,.2,.04,Math.PI)}
+ return t=>t4.forEach((p,i)=>p.rotation.x=.2+Math.sin(t*2.2+i*.5)*.15)}
+/* 6 Verdant Hexer */
+function bHexHorns(R){const h=R.P.hd,B=dkM(0x111111),Gn=sm(0x1e4a20,{roughness:.8});for(const s of[-1,1]){cQ(h,GS,Gn,s*.24,.5,-.14,.13,.13,.13);
+ for(let k=0;k<7;k++){const a=k*.5;cQ(h,GS,k%2?B:dkM(0x4a8a2a),s*(.32+Math.sin(a)*.14+k*.02),.42+Math.cos(a)*.14,-.02,.06-k*.005,.06-k*.005,.06-k*.005)}}
+ const lv=dkOrbs(h,0x8aff3a,5,.55,.4,.02);return t=>lv(t)}
+function bVerdCloak(R){const cp=cP(R.g,0,.66,-.2),Dg=cloth(0x14361a),Ol=cloth(0x8a9a2a);cQ(cp,GX,Dg,0,-.75,0,.9,1.5,.03);for(let k=0;k<8;k++)cQ(cp,GX,Ol,(k-3.5)*.11,-1.48,.02,.08,.08,.01,0,0,k%2?.8:-.8);
+ for(const s of[-1,1])cQ(cp,CG.half,Dg,s*.4,0,.18,.22,.15,.26);for(const p of[R.P.la,R.P.ra]){cQ(p,CG.fr,Dg,0,-.42,0,.28,.6,.28);cQ(p,CG.tk,Ol,0,-.71,0,.28,.28,1.4,HP)}
+ return(t,v)=>{cp.rotation.x=.12+.6*mv(v)+Math.sin(t*1.9)*.04}}
+function bThornGarb(R){const g=R.g,D=cloth(0x101810),Ol=sm(0x7a8a24);cQ(g,GX,D,0,.3,0,.68,.71,.41);cQ(g,GX,Ol,0,.3,.208,.04,.7,.01);cQ(g,GY,Ol,0,-.02,0,.36,.06,.22);
+ for(const p of[R.P.la,R.P.ra])cQ(p,GY,dkM(0x1a2a14),0,-.62,0,.13,.14,.13);for(const p of[R.P.ll,R.P.rl]){cQ(p,GY,D,0,-.4,0,.15,.7,.15);cQ(p,GX,dkM(0x1a2a14),0,-.74,.05,.24,.14,.32);cQ(p,CG.tk,Ol,0,-.66,0,.16,.16,1.4,HP)}}
+function bHexStaff(R){const sp=cP(R.P.ra,0,-.7,.1),W=sm(0xc8a070,{roughness:.8}),V=sm(0x2a7a2a);cQ(sp,GY,W,0,.35,0,.035,1.8,.035);for(let k=0;k<8;k++)cQ(sp,CG.tk,V,0,-.3+k*.17,0,.05,.05,1.2,HP+.3,k,0);
+ const gm=cQ(sp,GO,gemM(0xc8ff2a,0x6a9a00),0,1.35,0,.1,.15,.1);const o=dkOrbs(sp,0xd8ff6a,5,.25,1.3,.02);return t=>{gm.rotation.y=t*1.5;o(t)}}
+SETS.push(
+{id:'dk_witch',dk:1,name:'The Umbral Witch',crate:'UMBRAL WITCH CRATE',g:'♛',col:'#e0203a',c3:0xe0203a,price:800,th:"A dark sorceress in black, crimson, dark red and white.",pieces:[
+ {id:'dk_witch_hennin',n:'Horned Hennin',slot:'head',d:"Tall black witch's headdress shaped like two horns, with a small red diamond gem.",b:bHennin},
+ {id:'dk_witch_gown',n:'Enchantress Gown',slot:'legs',d:'Floor-length dress split into black and deep crimson halves, with a pointed witch-hat-shaped skirt.',b:bEnchGown},
+ {id:'dk_witch_mantle',n:'Draconic Mantle',slot:'back',d:'Enormous black cape with a brick-red interior, shaped like folded dragon wings.',b:bDracMantle},
+ {id:'dk_witch_regalia',n:'Crimson Regalia',slot:'chest',d:'Crimson shoulder guards and breastplate with a red gemstone, mismatched gloves and trailing translucent ribbons.',b:bCrimRegalia}]},
+{id:'dk_seer',dk:1,name:'The Violet Seer',crate:'VIOLET SEER CRATE',g:'◉',col:'#b070ff',c3:0xb070ff,price:800,th:"Ivory, charcoal, pale purple, violet and fuchsia — a blindfolded seer of poison.",pieces:[
+ {id:'dk_seer_veil',n:"Seer's Veil",slot:'head',d:'Black leather eye covering with a silver eye-shaped emblem and studs.',b:bSeerVeil},
+ {id:'dk_seer_locks',n:'Noodle Locks',slot:'drape',d:'Long ivory hair tendrils with lilac undersides, purple spores and floating violet fungal horns.',b:bNoodleLocks},
+ {id:'dk_seer_wear',n:'Straitjacket Streetwear',slot:'legs',d:'Sleeveless ribbed top, black crop layer and extremely wide pale trousers with black straps.',b:bStraitWear},
+ {id:'dk_seer_shackles',n:'Shackles of Twilight',slot:'chest',d:'Black metal collar and wrist cuffs, broken chains, a violet gem tag and floating poison orbs.',b:bShackles}]},
+{id:'dk_spore',dk:1,name:'The Sporebound',crate:'SPOREBOUND CRATE',g:'❀',col:'#3ce0d0',c3:0x3ce0d0,price:800,th:"White, turquoise, deep cyan and sickly green — a wandering spore-child.",pieces:[
+ {id:'dk_spore_crown',n:'Spore Crown',slot:'head',d:'Translucent blunt bangs, white pom-pom hair ties and floating turquoise fungal growths.',b:bSporeCrown},
+ {id:'dk_spore_gown',n:'Withered Nightgown',slot:'legs',d:'Oversized tattered white nightgown with long sleeves, holes and sage-green lining.',b:bNightgown},
+ {id:'dk_spore_halo',n:'Fungal Halo',slot:'aura',d:'Turquoise stalks and floating spherical spores surrounding the head and shoulders.',b:bFungalHalo},
+ {id:'dk_spore_chains',n:'Broken Chains',slot:'chest',d:'Black metal collar with a diamond pendant, a broken ankle chain and dark green fungus at the feet.',b:bSporeChains}]},
+{id:'dk_gloom',dk:1,name:'The Gloom Colossus',crate:'GLOOM COLOSSUS CRATE',g:'⛓',col:'#ff3a20',c3:0xff3a20,price:800,th:"Black, charcoal, dull grey and burning red — a hulking brute of ruin.",pieces:[
+ {id:'dk_gloom_crown',n:'Crown of Decay',slot:'head',d:'Long black hair with floating sphere and diamond-shaped braid ornaments.',b:bDecayCrown},
+ {id:'dk_gloom_torso',n:'Branded Torso',slot:'chest',d:'Muscular charcoal-grey torso with a glowing red runic chest marking.',b:bBrandTorso},
+ {id:'dk_gloom_trousers',n:'Shattered Trousers',slot:'legs',d:'Torn grey trousers with darkened edges and rough fabric.',b:bShatTrousers},
+ {id:'dk_gloom_collar',n:'Collar of Ruin',slot:'hand',d:'Broken metal neck chain and glowing diamond markings across the arms and legs.',b:bRuinCollar}]},
+{id:'dk_general',dk:1,name:'The Cakebound General',crate:'CAKEBOUND GENERAL CRATE',g:'✠',col:'#c01830',c3:0xc01830,price:800,th:"Burgundy, crimson, charcoal, pale grey and silver — a general with a monstrous claw.",pieces:[
+ {id:'dk_general_locks',n:"General's Locks",slot:'drape',d:'Extremely long charcoal hair with crimson streaks, layered sides and upward-curving ends.',b:bGenLocks},
+ {id:'dk_general_jacket',n:"Commander's Jacket",slot:'chest',d:'Cropped burgundy jacket with black cuffs, red fur collar and silver chain clasps over a carmine shirt.',b:bCmdJacket},
+ {id:'dk_general_slacks',n:'Military Slacks',slot:'legs',d:'Pale trousers with a red thigh band, black belt, salmon buckle and raven-black ruby boots.',b:bMilSlacks},
+ {id:'dk_general_claw',n:'Cakebound Claw',slot:'hand',d:'Oversized right-arm monster claw with red-and-white striped layers, a pale palm and four scarlet talons.',b:bCakeClaw}]},
+{id:'dk_hexer',dk:1,name:'The Verdant Hexer',crate:'VERDANT HEXER CRATE',g:'♣',col:'#a8e02a',c3:0xa8e02a,price:800,th:"Olive, dark green, black and chartreuse — a horned hexer of leaf and vine.",pieces:[
+ {id:'dk_hexer_horns',n:'Horns of the Hexer',slot:'head',d:'Curled black ram horns with green stripes, dark-green double buns and tiny tea leaves.',b:bHexHorns},
+ {id:'dk_hexer_cloak',n:'Verdant Cloak',slot:'back',d:'Oversized dark-green cloak with olive zigzag patterns along the hem and sleeves.',b:bVerdCloak},
+ {id:'dk_hexer_garb',n:'Thornbound Garments',slot:'chest',d:'Dark layered clothing with olive-green trim, matching gloves and boots.',b:bThornGarb},
+ {id:'dk_hexer_staff',n:'Staff of the Unfinished',slot:'hand',d:'Tan wooden staff wrapped in vines, topped with a chartreuse gem and floating tea-seed particles. Purely visual.',b:bHexStaff}]});
+
 var FPL=null;
 function fpBuild(){if(!FPL){FPL={g:new THREE.Group(),list:[],ups:[],t:0};cam.add(FPL.g)}FPL.list.forEach(o=>o.parent&&o.parent.remove(o));FPL.list=[];FPL.ups=[];CUR=FPL;const eq=ownedEq();for(const sl in eq){const p=PC[eq[sl]];if(p&&p.slot==sl&&p.fp){const u=p.fp(FPL.g);if(u)FPL.ups.push(u)}}CUR=null}
 function fpUpd(dt){if(!FPL)return;FPL.t+=dt;FPL.ups.forEach(u=>u(FPL.t))}
@@ -1081,7 +1193,7 @@ function closeShop(){shopE.classList.remove('on');PV.on=0;$('menu').style.displa
 function openRoom(){SH.tab='room';SH.sel=null;openShop()}
 function crSlot(sl){SH.slot=sl;SH.sel=null;renderShop()}
 function csEqOwned(i){SETS[i].pieces.forEach(p=>{if(own(p.id))SV.eq[p.slot]=p.id});svSave();refreshAV();renderShop()}
-const aaH=(x,i)=>x.aa&&!(SETS[i-1]&&SETS[i-1].aa)?'<div class="aah">✦ AWAKENED ANCIENTS</div>':'';
+const aaH=(x,i)=>x.aa&&!(SETS[i-1]&&SETS[i-1].aa)?'<div class="aah">✦ AWAKENED ANCIENTS</div>':''+(x.dk&&!(SETS[i-1]&&SETS[i-1].dk)?'<div class="aah dkh">☾ THE DARKNESS SET</div>':'');
 function roomHTML(){const sl=SH.slot||(SH.slot='head');
  const left='<div class="ph">Your loadout</div>'+Object.keys(SLN).map(k=>{const id=SV.eq[k];return`<div class="eqr${k==sl?' on':''}" style="cursor:pointer" onclick="crSlot(\'${k}\')"><span>${SLN[k]}</span>${id?`<b>${PC[id].n}</b><button class="mini" onclick="event.stopPropagation();csUn(\'${k}\')">✕</button>`:'<i>— empty —</i>'}</div>`}).join('')+'<button class="mini wide" onclick="csUnAll()">Unequip all</button><div class="ph" style="margin-top:18px">Outfits</div>'+SETS.map((x,i)=>{const n=x.pieces.filter(p=>own(p.id)).length;return aaH(x,i)+`<div class="eqr" style="--c:${x.col}"><span style="width:auto;color:${x.col}">${x.g}</span><b>${x.name} <small style="color:#8fa6d8">${n}/4</small></b>${n==4?`<button class="mini gb" style="--c:${x.col}" onclick="csEqSet(${i})">Wear set</button>`:n?`<button class="mini" onclick="csEqOwned(${i})">Wear owned</button>`:'<i>locked</i>'}</div>`}).join('');
  const ps=SETS.flatMap(S=>S.pieces.filter(p=>p.slot==sl)).sort((a,b)=>!!own(b.id)-!!own(a.id));
@@ -1113,7 +1225,7 @@ function revealAnim(S,p,dup,gn,comp,quick){revE.style.setProperty('--c',S.col);r
  let k=0;const tk=()=>{if(k++<10){beep(200+k*60,.05,'square');setTimeout(tk,150)}else fin()};tk()}
 function revNext(comp,si){if(comp)showcase(si);else closeRev()}
 function closeRev(){revE.classList.remove('on');PV.spin=1;renderShop()}
-function showcase(i){const S=SETS[i];revE.style.setProperty('--c',S.col);revE.innerHTML=`<div class="burst"></div><div class="burst d2"></div>${S.aa?'<div class="rush-k">AWAKENED ANCIENTS</div>':''}<div class="done-t">SET COMPLETED</div><div class="rnm">${S.name}</div><div id="revHost" class="pvw big"></div><p class="ds3">All four pieces collected. Wear them together to awaken the set aura — purely cosmetic.</p><div class="acts c"><button class="gb" style="--c:${S.col}" onclick="csEqSet(${i});closeRev()">Equip full set</button><button onclick="closeRev()">Continue</button></div>`;$('revHost').appendChild(PV.r.domElement);const eq={};S.pieces.forEach(p=>eq[p.slot]=p.id);applyCos(PV.R,eq);PV.spin=3;[523,659,784,1047].forEach((f,k)=>setTimeout(()=>beep(f,.3,'triangle'),k*140))}
+function showcase(i){const S=SETS[i];revE.style.setProperty('--c',S.col);revE.innerHTML=`<div class="burst"></div><div class="burst d2"></div>${S.aa?'<div class="rush-k">AWAKENED ANCIENTS</div>':''}${S.dk?'<div class="rush-k" style="color:#ff3a50;text-shadow:0 0 18px #ff0030">THE DARKNESS SET</div>':''}<div class="done-t">SET COMPLETED</div><div class="rnm">${S.name}</div><div id="revHost" class="pvw big"></div><p class="ds3">All four pieces collected. Wear them together to awaken the set aura — purely cosmetic.</p><div class="acts c"><button class="gb" style="--c:${S.col}" onclick="csEqSet(${i});closeRev()">Equip full set</button><button onclick="closeRev()">Continue</button></div>`;$('revHost').appendChild(PV.r.domElement);const eq={};S.pieces.forEach(p=>eq[p.slot]=p.id);applyCos(PV.R,eq);PV.spin=3;[523,659,784,1047].forEach((f,k)=>setTimeout(()=>beep(f,.3,'triangle'),k*140))}
 /* --- BOSS RUSH --- */
 const RUSH={w:[],c:[]},RBC=['#9aa','#e44','#f63','#c6f','#f90'],rushE=mkd('left:18px;top:92px;padding:8px 12px;border-left:3px solid #f63;background:#000a;font:800 12px "Segoe UI",sans-serif;letter-spacing:2px;display:none;text-shadow:0 0 4px #000');
 function rushRoll(){RUSH.w=[];for(const n of Object.keys(W).sort(()=>Math.random()-.5)){if(RUSH.w.length>=5)break;if(W[n].wing&&RUSH.w.some(x=>W[x].wing))continue;RUSH.w.push(n)}RUSH.c=Object.keys(CN).sort(()=>Math.random()-.5).slice(0,3)}
@@ -1134,4 +1246,816 @@ refreshAV();balUI();
 
 setMap(0);requestAnimationFrame(loop);
 </script><button id="adminInf" title="Admin: infinite currency (testing)" onclick="SV.cur=999999999;SV.sh=999999999;svSave();this.textContent='∞ Granted';setTimeout(()=>this.textContent='ADMIN ∞',1200)" style="position:fixed;bottom:12px;left:12px;z-index:99999;padding:8px 14px;border-radius:10px;border:2px solid #ff4d6d;background:#1a0710;color:#ff9fb0;font:700 13px system-ui,sans-serif;letter-spacing:.08em;cursor:pointer;box-shadow:0 0 14px #ff4d6d66">ADMIN ∞</button>
-</body></html>
+<script>window.AC_MULTIPLAYER_URL="wss://82d25a13-249d-4995-808e-c96b76d30452-00-1rbxsk6fvs6k4.kirk.replit.dev/api/multiplayer";</script><script>(() => {
+  const MP = {
+    socket: null,
+    code: "",
+    selfId: "",
+    hostId: "",
+    name: "",
+    players: [],
+    avatars: new Map(),
+    inRoom: false,
+    host: false,
+    started: false,
+    waitingForWave: false,
+    awaitingWaveEntry: false,
+    enemySequence: 0,
+    snapshotWave: 0,
+    waveTotal: 0,
+    lastPositionAt: 0,
+    lastSnapshotAt: 0,
+    lastLobbyMessage: "",
+  };
+
+  const baseStartGame = window.startGame;
+  const baseStartWave = window.startWave;
+  const baseSetMap = window.setMap;
+  const baseDone = window.done;
+  const baseReward = window.reward;
+  const baseDmg = window.dmg;
+  const baseKill = window.kill;
+  const baseHurt = window.hurt;
+  const baseSpawn = window.spawn;
+  const baseSpawnBoss = window.spawnBoss;
+  const baseUpE = window.upE;
+
+  const escapeHtml = (value) =>
+    String(value).replace(/[&<>"']/g, (char) => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;",
+    })[char]);
+
+  function mpSend(data) {
+    if (MP.socket?.readyState === WebSocket.OPEN) {
+      MP.socket.send(JSON.stringify(data));
+      return true;
+    }
+    return false;
+  }
+
+  function removeAvatars() {
+    for (const avatar of MP.avatars.values()) {
+      sc.remove(avatar.model);
+      avatar.tag?.material.map?.dispose();
+      avatar.tag?.material.dispose();
+    }
+    MP.avatars.clear();
+  }
+
+  function updatePartyBadge() {
+    let badge = document.getElementById("partyBadge");
+    if (!MP.inRoom) {
+      badge?.remove();
+      return;
+    }
+    if (!badge) {
+      badge = document.createElement("div");
+      badge.id = "partyBadge";
+      document.body.appendChild(badge);
+    }
+    badge.innerHTML = `<b>PARTY ${escapeHtml(MP.code)}</b><span>${MP.players.length}/4 PLAYERS</span>`;
+  }
+
+  function colorForId(id) {
+    let hash = 0;
+    for (let index = 0; index < id.length; index += 1) {
+      hash = (hash * 31 + id.charCodeAt(index)) | 0;
+    }
+    return [0x65c7ff, 0xffc35a, 0xc48aff, 0x7af0c0][Math.abs(hash) % 4];
+  }
+
+  function makeNameTag(name, color) {
+    const canvas = document.createElement("canvas");
+    const context = canvas.getContext("2d");
+    if (!context) return null;
+    context.font = "700 42px Arial, sans-serif";
+    const width = Math.min(640, Math.ceil(context.measureText(name).width + 44));
+    canvas.width = Math.max(160, width);
+    canvas.height = 92;
+    context.font = "700 42px Arial, sans-serif";
+    context.textAlign = "center";
+    context.textBaseline = "middle";
+    context.fillStyle = "rgba(5, 7, 16, .84)";
+    context.strokeStyle = `#${color.toString(16).padStart(6, "0")}`;
+    context.lineWidth = 4;
+    context.beginPath();
+    context.roundRect(3, 3, canvas.width - 6, canvas.height - 6, 20);
+    context.fill();
+    context.stroke();
+    context.fillStyle = "#ffffff";
+    context.shadowColor = `#${color.toString(16).padStart(6, "0")}`;
+    context.shadowBlur = 10;
+    context.fillText(name, canvas.width / 2, canvas.height / 2);
+
+    const texture = new THREE.CanvasTexture(canvas);
+    const material = new THREE.SpriteMaterial({
+      map: texture,
+      transparent: true,
+      depthTest: false,
+      depthWrite: false,
+    });
+    const sprite = new THREE.Sprite(material);
+    sprite.position.y = 2.08;
+    sprite.scale.set(Math.max(1.5, canvas.width / 170), 0.48, 1);
+    sprite.renderOrder = 1000;
+    return sprite;
+  }
+
+  function addAvatar(player) {
+    if (player.id === MP.selfId || MP.avatars.has(player.id)) return;
+    const color = colorForId(player.id);
+    const model = mk(color, 1, color, "player");
+    const tag = makeNameTag(player.name, color);
+    if (tag) model.add(tag);
+    sc.add(model);
+    MP.avatars.set(player.id, {
+      model,
+      tag,
+      name: player.name,
+      target: new THREE.Vector3(player.x, player.y - 1.7, player.z),
+    });
+  }
+
+  function updatePlayers(players) {
+    if (!Array.isArray(players)) return;
+    MP.players = players;
+    const present = new Set();
+    for (const player of players) {
+      if (!player || typeof player.id !== "string") continue;
+      if (player.id === MP.selfId) continue;
+      present.add(player.id);
+      addAvatar(player);
+      const avatar = MP.avatars.get(player.id);
+      if (!avatar) continue;
+      const position = new THREE.Vector3(
+        Number(player.x) || 0,
+        (Number(player.y) || 1.7) - 1.7,
+        Number(player.z) || 0,
+      );
+      avatar.target.copy(position);
+      avatar.model.rotation.y = Number(player.yaw) || 0;
+      if (avatar.name !== player.name) {
+        sc.remove(avatar.model);
+        avatar.tag?.material.map?.dispose();
+        avatar.tag?.material.dispose();
+        MP.avatars.delete(player.id);
+        addAvatar(player);
+        const refreshed = MP.avatars.get(player.id);
+        if (refreshed) {
+          refreshed.target.copy(position);
+          refreshed.model.rotation.y = Number(player.yaw) || 0;
+        }
+      }
+    }
+    for (const [id, avatar] of MP.avatars) {
+      if (!present.has(id)) {
+        sc.remove(avatar.model);
+        avatar.tag.material.map?.dispose();
+        avatar.tag.material.dispose();
+        MP.avatars.delete(id);
+      }
+    }
+    updatePartyBadge();
+  }
+
+  function showOnlineEntry(error = "") {
+    const savedName = localStorage.getItem("abstract-concepts-player-name") || "";
+    ov(`
+      <h2>ONLINE MULTIPLAYER</h2>
+      <p class="mp-copy">Create a room for your party, or join with a code from the host.</p>
+      ${error ? `<div class="mp-error">${escapeHtml(error)}</div>` : ""}
+      <label class="mp-label">PLAYER NAME
+        <input id="onlineName" class="mp-input" maxlength="18" value="${escapeHtml(savedName)}" placeholder="Enter a name" autocomplete="nickname">
+      </label>
+      <button onclick="onlineCreate()">Create lobby</button>
+      <div class="mp-divider">OR JOIN A LOBBY</div>
+      <input id="onlineCode" class="mp-input mp-code-input" maxlength="10" inputmode="numeric" placeholder="Lobby code" aria-label="Lobby code">
+      <button onclick="onlineJoin()">Join lobby</button>
+      <button onclick="ov()">Back</button>`);
+  }
+
+  function updateRoomState(message) {
+    if (typeof message.code === "string") MP.code = message.code;
+    if (typeof message.hostId === "string") MP.hostId = message.hostId;
+    if (typeof message.started === "boolean") MP.started = message.started;
+    if (typeof message.selfId === "string") MP.selfId = message.selfId;
+    MP.host = MP.selfId !== "" && MP.selfId === MP.hostId;
+    if (Array.isArray(message.players)) updatePlayers(message.players);
+    updatePartyBadge();
+  }
+
+  function renderOnlineLobby(error = "") {
+    const rows = MP.players
+      .map((player) => `
+        <div class="mp-player">
+          <span class="mp-player-dot"></span>
+          <span>${escapeHtml(player.name)}${player.id === MP.hostId ? " · HOST" : ""}</span>
+          ${player.ready ? '<small>READY</small>' : ""}
+        </div>`)
+      .join("");
+    const startButton = MP.host
+      ? `<button onclick="onlineStart()" ${MP.started ? "disabled" : ""}>${MP.started ? "Match started" : "Start match"}</button>`
+      : '<p class="mp-copy">Waiting for the host to start the match.</p>';
+    ov(`
+      <h2>YOUR LOBBY</h2>
+      ${error ? `<div class="mp-error">${escapeHtml(error)}</div>` : ""}
+      <p class="mp-copy">Share this code with up to 3 friends.</p>
+      <div class="mp-room-code">${escapeHtml(MP.code)}</div>
+      <button class="mp-secondary" onclick="onlineCopy()">Copy code</button>
+      <div class="mp-player-list">${rows}<div class="mp-player mp-slot">${4 - MP.players.length} open ${4 - MP.players.length === 1 ? "slot" : "slots"}</div></div>
+      ${startButton}
+      <button onclick="onlineLeave()">Leave lobby</button>`);
+  }
+
+  function showNetworkError(message) {
+    MP.lastLobbyMessage = message;
+    if (MP.inRoom) renderOnlineLobby(message);
+    else showOnlineEntry(message);
+  }
+
+  function connectToLobby(action) {
+    const name = document.getElementById("onlineName")?.value?.trim() || "";
+    const code = document.getElementById("onlineCode")?.value?.trim() || "";
+    if (!name) {
+      showOnlineEntry("Enter a player name first.");
+      return;
+    }
+    if (action === "join" && !/^\d{1,10}$/.test(code)) {
+      showOnlineEntry("Enter a lobby code with 1 to 10 digits.");
+      return;
+    }
+
+    localStorage.setItem("abstract-concepts-player-name", name);
+    MP.name = name;
+    MP.lastLobbyMessage = "";
+    MP.socket?.close();
+    const address = window.AC_MULTIPLAYER_URL
+      ? new URL(window.AC_MULTIPLAYER_URL)
+      : new URL("/api/multiplayer", window.location.href);
+    if (!window.AC_MULTIPLAYER_URL) {
+      address.protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+    }
+    const socket = new WebSocket(address);
+    MP.socket = socket;
+    ov("<h2>CONNECTING</h2><p class=\"mp-copy\">Finding your party lobby…</p>");
+
+    socket.addEventListener("open", () => {
+      socket.send(JSON.stringify(
+        action === "create"
+          ? { type: "create", name }
+          : { type: "join", code, name },
+      ));
+    });
+    socket.addEventListener("message", (event) => {
+      let message;
+      try {
+        message = JSON.parse(event.data);
+      } catch {
+        showNetworkError("The lobby sent an invalid response.");
+        return;
+      }
+
+      if (message.type === "error") {
+        showNetworkError(message.message || "Could not join that lobby.");
+        return;
+      }
+      if (message.type === "joined" || message.type === "room-updated") {
+        if (message.type === "joined") {
+          MP.inRoom = true;
+          MP.lastLobbyMessage = "";
+        }
+        updateRoomState(message);
+        if (!MP.started) renderOnlineLobby(MP.lastLobbyMessage);
+        return;
+      }
+      if (message.type === "host-changed") {
+        MP.hostId = message.hostId;
+        MP.host = MP.selfId === MP.hostId;
+        return;
+      }
+      if (message.type === "match-start") {
+        MP.started = true;
+        if (MP.host && G.st === "play") return;
+        ov(`
+          <h2>THE MATCH IS READY</h2>
+          <p class="mp-copy">Click below to enter the shared arena.</p>
+          <button onclick="onlineEnterMatch()">Enter match</button>`);
+        return;
+      }
+      if (message.type === "wave-start") {
+        if (!MP.host && Number(message.wave) > G.w) {
+          while (G.w < Number(message.wave)) baseStartWave();
+          if (MP.waitingForWave) {
+            MP.waitingForWave = false;
+            MP.awaitingWaveEntry = true;
+            ov(`
+              <h2>WAVE ${Number(message.wave)} IS READY</h2>
+              <p class="mp-copy">The host has started the next wave.</p>
+              <button onclick="onlineContinueWave()">Enter arena</button>`);
+          }
+        }
+        return;
+      }
+      if (message.type === "wave-cleared") {
+        if (!MP.host && G.st === "play") baseReward();
+        return;
+      }
+      if (message.type === "all-ready") {
+        MP.waitingForWave = true;
+        ov(`
+          <h2>PARTY READY</h2>
+          <p class="mp-copy">The next wave is ready. Continue when you are set.</p>
+          <button onclick="onlineContinueWave()">Continue</button>`);
+        return;
+      }
+      if (message.type === "enemy-snapshot") {
+        applyEnemySnapshot(message);
+        return;
+      }
+      if (message.type === "enemy-hit") {
+        applyNetworkDamage(message.enemyId, message.damage);
+        return;
+      }
+      if (message.type === "player-hit") {
+        baseHurt(Number(message.damage) || 0);
+      }
+    });
+    socket.addEventListener("error", () => {
+      if (MP.socket === socket && !MP.inRoom) {
+        showNetworkError("Could not connect to the multiplayer server.");
+      }
+    });
+    socket.addEventListener("close", () => {
+      if (MP.socket !== socket) return;
+      const wasInRoom = MP.inRoom;
+      MP.inRoom = false;
+      MP.host = false;
+      MP.started = false;
+      MP.code = "";
+      MP.players = [];
+      removeAvatars();
+      updatePartyBadge();
+      if (wasInRoom && G.st === "play") msg("Multiplayer connection lost");
+    });
+  }
+
+  function onlineOpen() {
+    if (MP.inRoom) {
+      renderOnlineLobby();
+      return;
+    }
+    showOnlineEntry();
+  }
+
+  function onlineCreate() {
+    connectToLobby("create");
+  }
+
+  function onlineJoin() {
+    connectToLobby("join");
+  }
+
+  function onlineCopy() {
+    if (!MP.code) return;
+    if (!navigator.clipboard?.writeText) {
+      window.prompt("Share this lobby code", MP.code);
+      return;
+    }
+    navigator.clipboard.writeText(MP.code)
+      .then(() => msg("Lobby code copied"))
+      .catch(() => window.prompt("Share this lobby code", MP.code));
+  }
+
+  function onlineStart() {
+    if (!MP.host || !MP.inRoom) return;
+    if (mpSend({ type: "start" })) {
+      ov();
+      baseStartGame();
+    }
+  }
+
+  function onlineEnterMatch() {
+    ov();
+    baseStartGame();
+  }
+
+  function onlineContinueWave() {
+    if (MP.awaitingWaveEntry) {
+      MP.awaitingWaveEntry = false;
+      ov();
+      play();
+      return;
+    }
+    MP.waitingForWave = false;
+    ov();
+    baseDone();
+  }
+
+  function onlineLeave() {
+    const socket = MP.socket;
+    MP.inRoom = false;
+    MP.host = false;
+    MP.started = false;
+    MP.code = "";
+    MP.players = [];
+    MP.avatars.forEach((avatar) => {
+      sc.remove(avatar.model);
+      avatar.tag?.material.map?.dispose();
+      avatar.tag?.material.dispose();
+    });
+    MP.avatars.clear();
+    socket?.send(JSON.stringify({ type: "leave" }));
+    socket?.close();
+    updatePartyBadge();
+    ov();
+    $("menu").style.display = "flex";
+  }
+
+  async function downloadGameHtml() {
+    if (window.location.protocol === "file:") {
+      msg("This is already a downloaded HTML copy");
+      return;
+    }
+    try {
+      const response = await fetch("/api/game-download", {
+        credentials: "same-origin",
+      });
+      if (!response.ok) throw new Error("Download request failed");
+      const file = await response.blob();
+      const url = URL.createObjectURL(file);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "abstract-concepts.html";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      msg("HTML download started");
+    } catch {
+      msg("Could not download HTML");
+    }
+  }
+
+  function applyNetworkDamage(enemyId, damage) {
+    const enemy = G.en.find((candidate) => candidate.netId === enemyId);
+    const amount = Number(damage);
+    if (!enemy || !Number.isFinite(amount) || amount <= 0) return;
+    enemy.hp -= amount;
+    enemy.pop = 0.12;
+    enemy.fl = 0.1;
+    if (enemy.hp <= 0) baseKill(enemy);
+  }
+
+  function applyEnemySnapshot(message) {
+    if (!Array.isArray(message.enemies)) return;
+    const wave = Number(message.wave);
+    if (wave > G.w) {
+      G.w = wave;
+      setMap((wave - 1) % 6);
+    }
+    if (MP.snapshotWave !== wave) {
+      MP.snapshotWave = wave;
+      MP.waveTotal = message.enemies.length;
+    } else {
+      MP.waveTotal = Math.max(MP.waveTotal, message.enemies.length);
+    }
+    G.tot = MP.waveTotal;
+    const seen = new Set();
+    for (const data of message.enemies) {
+      if (!data || typeof data.id !== "string") continue;
+      seen.add(data.id);
+      let enemy = G.en.find((candidate) => candidate.netId === data.id);
+      if (!enemy) {
+        if (Number(data.boss) > 0) {
+          enemy = baseSpawnBoss(Number(data.boss) - 1, data.mini === true);
+        } else if (typeof data.type === "string" && T[data.type]) {
+          enemy = baseSpawn(data.type, Number(data.x) || 0, Number(data.z) || 0);
+        }
+        if (!enemy) continue;
+        enemy.netId = data.id;
+      }
+      enemy.t = data.type;
+      enemy.b = Number(data.boss) || 0;
+      enemy.mini = data.mini === true;
+      enemy.hp = Number(data.hp) || 0;
+      enemy.mhp = Number(data.maxHp) || 1;
+      enemy.sc = Number(data.scale) || enemy.sc;
+      enemy.m.scale.setScalar(enemy.sc);
+      enemy.netTarget = new THREE.Vector3(
+        Number(data.x) || 0,
+        Number(data.y) || 0,
+        Number(data.z) || 0,
+      );
+      enemy.m.rotation.y = Number(data.yaw) || 0;
+      enemy.absent = false;
+      enemy.m.visible = true;
+    }
+    for (const enemy of [...G.en]) {
+      if (enemy.netId && !seen.has(enemy.netId)) {
+        sc.remove(enemy.m);
+        if (enemy.mk) sc.remove(enemy.mk);
+        if (enemy.hb) sc.remove(enemy.hb);
+        G.en.splice(G.en.indexOf(enemy), 1);
+      }
+    }
+  }
+
+  function serialiseEnemies() {
+    return G.en.map((enemy) => {
+      if (!enemy.netId) {
+        MP.enemySequence += 1;
+        enemy.netId = `${MP.selfId}:${MP.enemySequence}`;
+      }
+      return {
+        id: enemy.netId,
+        type: enemy.t || "grunt",
+        boss: Number(enemy.b) || 0,
+        mini: enemy.mini === true,
+        x: enemy.m.position.x,
+        y: enemy.m.position.y,
+        z: enemy.m.position.z,
+        yaw: enemy.m.rotation.y,
+        hp: Math.max(0, enemy.hp),
+        maxHp: Math.max(1, enemy.mhp),
+        scale: enemy.sc,
+      };
+    });
+  }
+
+  function nearestPartyTarget(enemy) {
+    const targets = MP.players.filter((player) => player.alive !== false);
+    if (!targets.some((player) => player.id === MP.selfId)) {
+      targets.push({
+        id: MP.selfId,
+        x: cam.position.x,
+        y: cam.position.y,
+        z: cam.position.z,
+        alive: true,
+      });
+    }
+    let closest = null;
+    let closestDistance = Infinity;
+    for (const player of targets) {
+      const position =
+        player.id === MP.selfId
+          ? cam.position
+          : { x: Number(player.x), y: Number(player.y), z: Number(player.z) };
+      const distance = Math.hypot(
+        position.x - enemy.m.position.x,
+        position.z - enemy.m.position.z,
+      );
+      if (distance < closestDistance) {
+        closest = { player, position };
+        closestDistance = distance;
+      }
+    }
+    return closest;
+  }
+
+  function checkRemoteProjectiles() {
+    for (const projectile of [...G.pr]) {
+      for (const player of MP.players) {
+        if (player.id === MP.selfId || player.alive === false) continue;
+        const distance = projectile.m.position.distanceTo(
+          new THREE.Vector3(Number(player.x), Number(player.y) - 0.8, Number(player.z)),
+        );
+        if (distance > 1.1) continue;
+        mpSend({
+          type: "player-hit",
+          targetId: player.id,
+          damage: Number(projectile.d) || 0,
+        });
+        sc.remove(projectile.m);
+        G.pr.splice(G.pr.indexOf(projectile), 1);
+        break;
+      }
+    }
+  }
+
+  const menu = document.getElementById("menu");
+  if (menu) {
+    menu.insertAdjacentHTML(
+      "beforeend",
+      '<button onclick="onlineOpen()">Online Multiplayer</button><button onclick="downloadGameHtml()" style="padding:8px 16px;font-size:12px">Download HTML</button>',
+    );
+  }
+  document.head.appendChild(Object.assign(document.createElement("style"), {
+    textContent: `
+      #partyBadge{position:fixed;left:18px;top:48px;z-index:4;padding:7px 10px;border:1px solid #8a6aff;background:#080812dd;border-radius:6px;font:700 11px/1.4 monospace;letter-spacing:1.5px;box-shadow:0 0 12px #6a4aff66;pointer-events:none}
+      #partyBadge b{display:block;color:#d4c8ff}
+      #partyBadge span{color:#b8b0cc;font-size:9px}
+      .mp-copy{max-width:390px;margin:0 0 6px;color:#d1c9e4;line-height:1.5}
+      .mp-label{display:flex;flex-direction:column;gap:5px;align-items:center;font:700 11px monospace;letter-spacing:2px;color:#c9baff}
+      .mp-input{width:min(340px,80vw);padding:12px 14px;border:1px solid #8a6aff;border-radius:8px;background:#080812;color:white;font:600 15px monospace;letter-spacing:1px}
+      .mp-code-input{text-align:center;letter-spacing:6px}
+      .mp-divider{margin:8px 0 0;color:#9f93bb;font:700 10px monospace;letter-spacing:2px}
+      .mp-error{max-width:380px;padding:8px 12px;border:1px solid #ff667788;border-radius:7px;background:#3b1020;color:#ffdce2;font-size:13px}
+      .mp-room-code{padding:8px 22px;color:#fff;font:900 42px monospace;letter-spacing:9px;text-shadow:0 0 18px #8a6aff}
+      .mp-secondary{padding:7px 15px;font-size:12px}
+      .mp-player-list{display:flex;flex-direction:column;gap:5px;width:min(360px,85vw);margin:4px 0 10px;text-align:left}
+      .mp-player{display:flex;align-items:center;gap:9px;padding:7px 10px;border:1px solid #ffffff25;border-radius:6px;background:#070710aa;font:600 13px monospace}
+      .mp-player small{margin-left:auto;color:#8ff0c5;letter-spacing:1px}
+      .mp-player-dot{width:8px;height:8px;border-radius:50%;background:#76efbc;box-shadow:0 0 8px #76efbc}
+      .mp-slot{color:#918ba3;opacity:.75}
+      .mp-slot .mp-player-dot{background:#6a6576;box-shadow:none}
+    `,
+  }));
+
+  window.onlineOpen = onlineOpen;
+  window.onlineCreate = onlineCreate;
+  window.onlineJoin = onlineJoin;
+  window.onlineCopy = onlineCopy;
+  window.onlineStart = onlineStart;
+  window.onlineEnterMatch = onlineEnterMatch;
+  window.onlineContinueWave = onlineContinueWave;
+  window.onlineLeave = onlineLeave;
+  window.downloadGameHtml = downloadGameHtml;
+  window.addEventListener("beforeunload", () => {
+    MP.socket?.close();
+  });
+
+  window.startWave = function (...args) {
+    const result = baseStartWave(...args);
+    if (MP.inRoom && MP.host) {
+      mpSend({ type: "wave-start", wave: G.w });
+    }
+    return result;
+  };
+  window.setMap = function (mapIndex) {
+    if (!MP.inRoom) return baseSetMap(mapIndex);
+    const originalRandom = Math.random;
+    let seed = (
+      0x9e3779b9 ^
+      Math.imul(G.w + 1, 374_761_393) ^
+      Math.imul(mapIndex + 1, 668_265_263)
+    ) >>> 0;
+    Math.random = function () {
+      seed = (Math.imul(seed, 1_664_525) + 1_013_904_223) >>> 0;
+      return seed / 4_294_967_296;
+    };
+    try {
+      return baseSetMap(mapIndex);
+    } finally {
+      Math.random = originalRandom;
+    }
+  };
+  window.startGame = function (...args) {
+    return baseStartGame(...args);
+  };
+  window.spawn = function (...args) {
+    if (MP.inRoom && !MP.host) return undefined;
+    const enemy = baseSpawn(...args);
+    if (enemy && MP.inRoom && MP.host) {
+      MP.enemySequence += 1;
+      enemy.netId = `${MP.selfId}:${MP.enemySequence}`;
+    }
+    return enemy;
+  };
+  window.spawnBoss = function (...args) {
+    if (MP.inRoom && !MP.host) return undefined;
+    const enemy = baseSpawnBoss(...args);
+    if (enemy && MP.inRoom && MP.host) {
+      MP.enemySequence += 1;
+      enemy.netId = `${MP.selfId}:${MP.enemySequence}`;
+    }
+    return enemy;
+  };
+  window.done = function (...args) {
+    if (!MP.inRoom) return baseDone(...args);
+    G.luck = 0;
+    ov();
+    vmBuild();
+    G.st = "wait";
+    ov(`
+      <h2>LOADOUT LOCKED</h2>
+      <p class="mp-copy">Waiting for the rest of your party to choose their upgrade.</p>
+      <div class="mp-player-list">${MP.players.map((player) => `
+        <div class="mp-player">
+          <span class="mp-player-dot"></span>
+          <span>${escapeHtml(player.name)}</span>
+          ${player.id === MP.selfId ? "<small>READY</small>" : player.ready ? "<small>READY</small>" : ""}
+        </div>`).join("")}</div>
+      <button onclick="onlineLeave()">Leave party</button>`);
+    mpSend({ type: "ready" });
+  };
+  window.reward = function (...args) {
+    if (MP.inRoom && !MP.host) return;
+    if (MP.inRoom && !G.rwP) mpSend({ type: "wave-cleared" });
+    return baseReward(...args);
+  };
+  window.dmg = function (enemy, damage, source) {
+    const previousHp = enemy?.hp;
+    const result = baseDmg(enemy, damage, source);
+    if (
+      MP.inRoom &&
+      source === "p" &&
+      enemy?.netId &&
+      Number.isFinite(previousHp) &&
+      Number.isFinite(enemy.hp)
+    ) {
+      const appliedDamage = previousHp - enemy.hp;
+      if (appliedDamage > 0) {
+        mpSend({
+          type: "enemy-hit",
+          enemyId: enemy.netId,
+          damage: Math.min(10_000, appliedDamage),
+        });
+      }
+    }
+    return result;
+  };
+  window.hurt = function (damage) {
+    const result = baseHurt(damage);
+    if (MP.inRoom && G.hp <= 0) {
+      mpSend({
+        type: "position",
+        x: cam.position.x,
+        y: cam.position.y,
+        z: cam.position.z,
+        yaw: G.yaw,
+        alive: false,
+      });
+    }
+    return result;
+  };
+  window.upE = function (enemy, delta) {
+    if (!MP.inRoom) return baseUpE(enemy, delta);
+    if (!MP.host) return;
+    if (enemy.ally || enemy.hp <= 0) return baseUpE(enemy, delta);
+
+    const target = nearestPartyTarget(enemy);
+    if (!target) return baseUpE(enemy, delta);
+    const previousPosition = cam.position.clone();
+    const originalHurt = window.hurt;
+    cam.position.set(
+      target.position.x,
+      target.position.y,
+      target.position.z,
+    );
+    window.hurt = function (damage) {
+      if (target.player.id === MP.selfId) return baseHurt(damage);
+      mpSend({
+        type: "player-hit",
+        targetId: target.player.id,
+        damage: Math.min(500, Number(damage) || 0),
+      });
+    };
+    try {
+      return baseUpE(enemy, delta);
+    } finally {
+      cam.position.copy(previousPosition);
+      window.hurt = originalHurt;
+    }
+  };
+
+  const gameCanvas = document.querySelector("canvas");
+  gameCanvas?.addEventListener("click", () => {
+    if (MP.inRoom && G.st === "play" && !document.pointerLockElement) {
+      gameCanvas.requestPointerLock();
+    }
+  });
+
+  function multiplayerFrame(now) {
+    requestAnimationFrame(multiplayerFrame);
+    if (MP.inRoom && MP.socket?.readyState === WebSocket.OPEN) {
+      if (MP.started && now - MP.lastPositionAt >= 50) {
+        MP.lastPositionAt = now;
+        mpSend({
+          type: "position",
+          x: cam.position.x,
+          y: cam.position.y,
+          z: cam.position.z,
+          yaw: G.yaw,
+          alive: G.st !== "dead" && G.st !== "win",
+        });
+      }
+      if (MP.host && G.st === "play") {
+        if (now - MP.lastSnapshotAt >= 140) {
+          MP.lastSnapshotAt = now;
+          mpSend({
+            type: "enemy-snapshot",
+            wave: G.w,
+            enemies: serialiseEnemies(),
+          });
+        }
+        checkRemoteProjectiles();
+      }
+    }
+
+    for (const avatar of MP.avatars.values()) {
+      avatar.model.position.lerp(avatar.target, 0.3);
+    }
+    for (const enemy of G.en) {
+      if (enemy.netTarget && MP.inRoom && !MP.host) {
+        enemy.m.position.lerp(enemy.netTarget, 0.3);
+      }
+    }
+  }
+
+  requestAnimationFrame(multiplayerFrame);
+})();
+</script></body></html>
